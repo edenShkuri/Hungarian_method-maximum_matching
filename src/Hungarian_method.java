@@ -1,8 +1,10 @@
+import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class Hungarian_method {
+
 
     public static directed_Graph build_Directed_Graph(Undirected_Graph g) {
         directed_Graph newGraph=new directed_Graph();
@@ -70,30 +72,24 @@ public class Hungarian_method {
      build a directed graph
      return the graph
      */
-    public static void Hungarian_m(Undirected_Graph g){
-        if(!g.setBipartite()){ //check if bipartite and set groups
-            System.out.println("this graph is not bipartite");
-            return;
-        }
+    public static void Hungarian_m(Undirected_Graph g, JFrame f) throws InterruptedException {
         directed_Graph Matching_Graph =build_Directed_Graph(g);//build a directed graph
         List<NodeData> path=getAnyPath(Matching_Graph);
         while(path!=null){//while there is a path from Am to Bm
             SetAugmentingPath(g, path);
+            f.repaint();
+            Thread.sleep(1500);
             Matching_Graph =build_Directed_Graph(g); //build a new directed graph
             path=getAnyPath(Matching_Graph);
         }
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Undirected_Graph g=new Undirected_Graph();
         for (int i=0; i<14; i++){
             NodeData n=new NodeData(i);
             g.addNode(n);
-//            if(i%2==0){
-//                n.group=Group.A;
-//            }
-//            else n.group=Group.B;
         }
         g.addEdge(0,3);
         g.addEdge(0,7);
@@ -110,12 +106,24 @@ public class Hungarian_method {
         g.addEdge(10,13);
         g.addEdge(12,1);
 
+        g.setBipartite();
 
+
+        JFrame frame =new JFrame();
+        frame.setSize(1100,600);
+        Hungarian_GUI gui=new Hungarian_GUI(g);
+        frame.add(gui);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         System.out.println(g);
         LinkedList<NodeData> A=new LinkedList<>();
         LinkedList<NodeData> B=new LinkedList<>();
-        Hungarian_m(g);
+        Hungarian_m(g, frame);
+
+//        g.clearUnmached();
+//        frame.repaint();
+
         for (NodeData n: g.get_all_V()){//fill the lists
             if(n.group==Group.A){A.add(n);}
             else{B.add(n);}

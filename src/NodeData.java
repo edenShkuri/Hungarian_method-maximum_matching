@@ -14,6 +14,22 @@ public class NodeData implements Comparable<Object>{
     private int tag;
     Group group;
     private double weight;
+    Point p;
+
+
+    public NodeData(){
+        this.key = index++;
+        this.match = false;
+        weight=0.0;
+        p=new Point();
+    }
+
+    public NodeData(int key){
+        this.key = key;
+        this.match = false;
+        weight=0.0;
+        p=new Point();
+    }
 
     public int getTag() {
         return tag;
@@ -29,15 +45,15 @@ public class NodeData implements Comparable<Object>{
         this.weight = w;
     }
 
-    public NodeData(){
-        this.key = index++;
-        this.match = false;
-        weight=0.0;
+
+
+    public void setP(int x, int y) {
+        p.setX(x);
+        p.setY(y);
     }
-    public NodeData(int key){
-        this.key = key;
-        this.match = false;
-        weight=0.0;
+
+    public Point getP() {
+        return p;
     }
 
     public int getKey(){

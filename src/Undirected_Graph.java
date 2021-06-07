@@ -159,4 +159,17 @@ public class Undirected_Graph {
     }
 
 
+    public void clearUnmached() {
+        LinkedList<edgeData> unMatched=new LinkedList<>();
+        for(NodeData n: get_all_V()){
+            for(edgeData e: get_all_E(n.getKey())){
+                if(!e.getMatched()){
+                    unMatched.add(e);
+                }
+            }
+        }
+        for(edgeData e: unMatched){
+            removeEdge(e.getSrc(), e.getDest());
+        }
+    }
 }

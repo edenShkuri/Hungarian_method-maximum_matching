@@ -114,15 +114,15 @@ public class MainProg {
         g.clearUnCovered();
         f.repaint();
 
-//        System.out.println(g+"\n");
-//        LinkedList<NodeData> A=new LinkedList<>();
-//        LinkedList<NodeData> B=new LinkedList<>();
-//        for (NodeData n: g.get_all_V()){//fill the lists
-//            if(n.group==Group.A){A.add(n);}
-//            else{B.add(n);}
-//        }
-//        System.out.println("A: "+A.toString());
-//        System.out.println("B: "+B.toString()+"\n");
+        System.out.println(g+"\n");
+        LinkedList<NodeData> A=new LinkedList<>();
+        LinkedList<NodeData> B=new LinkedList<>();
+        for (NodeData n: g.get_all_V()){//fill the lists
+            if(n.group==Group.A){A.add(n);}
+            else{B.add(n);}
+        }
+        System.out.println("A: "+A.toString());
+        System.out.println("B: "+B.toString()+"\n");
 
         System.out.println("matched edges: \n"+g.getAllMatchedEdges().toString());
         System.out.println("\nmatched nodes: \n"+g.getAllMatchedNodes().toString());

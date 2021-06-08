@@ -4,12 +4,13 @@ import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Hungarian_GUI extends JPanel {
+public class GUI extends JPanel {
     Undirected_Graph graph;
     LinkedList<NodeData> GroupA;
     LinkedList<NodeData> GroupB;
+    boolean EdgeCover;
 
-    public Hungarian_GUI(Undirected_Graph g) {
+    public GUI(Undirected_Graph g) {
         this.graph=g;
 
         GroupA=new LinkedList<>();
@@ -22,17 +23,34 @@ public class Hungarian_GUI extends JPanel {
                 GroupB.add(n);
             }
         }
+        EdgeCover=false;
+    }
+
+    public void setEdgeCover(boolean b){
+        EdgeCover=b;
     }
 
     public void paint(Graphics g){
         int max=Math.max(GroupA.size(), GroupB.size());
-        System.out.println("max= "+max);
         int w=max*40+(max+1)*60+200;
         setSize(w,500);
 
         drawNodes(g);
         drawEdges(g);
+        drawDetails(g);
 
+    }
+
+    private void drawDetails(Graphics g) {
+        Font f=new Font("SansSerif", Font.BOLD, 18);
+        g.setFont(f);
+        g.setColor(Color.black);
+        if(EdgeCover) {
+            int size=graph.getAllEdgesCover().size()+graph.getAllMatchedEdges().size();
+            g.drawString("τ(G): "+size, 100, 400);
+        }
+        g.drawString("α(G): "+graph.getAllMatchedEdges().size(), 100, 430);
+        g.drawString("ν(G): "+graph.get_all_V().size(), 100, 460);
     }
 
     private void drawEdges(Graphics g) {
@@ -46,8 +64,12 @@ public class Hungarian_GUI extends JPanel {
                     x2=ni.getP().getX(),
                     y2=ni.getP().getY();
                  g2.setColor(Color.BLACK);
-                 if(graph.getEdge(n.getKey(), ni.getKey()).getMatched()){
+                 edgeData e=graph.getEdge(n.getKey(), ni.getKey());
+                 if(e.getMatched()){
                      g2.setColor(new Color(201,62,7));
+                 }
+                 else if(e.getEdgeCover()){
+                     g2.setColor(new Color(0,79,139));
                  }
                  g2.drawLine(x1, y1, x2, y2);
             }
@@ -58,7 +80,6 @@ public class Hungarian_GUI extends JPanel {
         Graphics2D g2= (Graphics2D)g;
         g2.setStroke(new BasicStroke(3));
         int i=1;
-        System.out.println("draw A, "+GroupA.size());
         for(NodeData n: GroupA){
             g2.setColor(Color.white);
             if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
@@ -73,8 +94,6 @@ public class Hungarian_GUI extends JPanel {
             g2.drawString(""+key, (100*i)+15, 126);
             i++;
         }
-
-        System.out.println("draw B, "+GroupB.size());
 
         i=1;
         for(NodeData n: GroupB){

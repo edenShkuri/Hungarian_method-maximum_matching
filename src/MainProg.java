@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Hungarian_method {
+public class MainProg {
 
 
     public static directed_Graph build_Directed_Graph(Undirected_Graph g) {
@@ -78,19 +78,83 @@ public class Hungarian_method {
         while(path!=null){//while there is a path from Am to Bm
             SetAugmentingPath(g, path);
             f.repaint();
-            Thread.sleep(1500);
+            Thread.sleep(500);
             Matching_Graph =build_Directed_Graph(g); //build a new directed graph
             path=getAnyPath(Matching_Graph);
         }
     }
 
+    public static void MinimumEdgeCover(Undirected_Graph g, JFrame f) throws InterruptedException {
+        Hungarian_m(g, f);
+        LinkedList<NodeData> unMatched =g.getUnMatchedNodes();
+        for(NodeData n: unMatched){
+            for(NodeData nei: g.getNi(n)){
+                if(nei.getMatch()){
+                    g.getEdge(n.getKey(), nei.getKey()).setEdgeCover(true);
+                    g.getEdge(nei.getKey(), n.getKey()).setEdgeCover(true);
+                    f.repaint();
+                    Thread.sleep(500);
+                    System.out.println();
+                    break;
+                }
+            }
+        }
+    }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void TestHungarian(Undirected_Graph g) throws InterruptedException {
+        JFrame f =new JFrame();
+        f.setSize(1100,600);
+        GUI gui=new GUI(g);
+        f.add(gui);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        Thread.sleep(1500);
+        Hungarian_m(g,f);
+        g.clearUnCovered();
+        f.repaint();
+
+//        System.out.println(g+"\n");
+//        LinkedList<NodeData> A=new LinkedList<>();
+//        LinkedList<NodeData> B=new LinkedList<>();
+//        for (NodeData n: g.get_all_V()){//fill the lists
+//            if(n.group==Group.A){A.add(n);}
+//            else{B.add(n);}
+//        }
+//        System.out.println("A: "+A.toString());
+//        System.out.println("B: "+B.toString()+"\n");
+
+        System.out.println("matched edges: \n"+g.getAllMatchedEdges().toString());
+        System.out.println("\nmatched nodes: \n"+g.getAllMatchedNodes().toString());
+    }
+
+    public static void TestEdgeCover(Undirected_Graph g) throws InterruptedException {
+        JFrame f =new JFrame();
+        f.setSize(1100,600);
+        GUI gui=new GUI(g);
+        gui.setEdgeCover(true);
+        f.add(gui);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        Thread.sleep(1500);
+        Hungarian_m(g,f);
+        MinimumEdgeCover(g,f);
+        g.clearUnCovered();
+        f.repaint();
+        LinkedList<edgeData> Edge_cover =new LinkedList<>();
+        Edge_cover.addAll(g.getAllEdgesCover());
+        Edge_cover.addAll(g.getAllMatchedEdges());
+        System.out.println("Edges in Edge cover:\n"+ Edge_cover.toString());
+    }
+
+    public static Undirected_Graph CreateGraph(){
         Undirected_Graph g=new Undirected_Graph();
         for (int i=0; i<14; i++){
             NodeData n=new NodeData(i);
             g.addNode(n);
         }
+        g.addEdge(6,3);
         g.addEdge(0,3);
         g.addEdge(0,7);
         g.addEdge(0,11);
@@ -105,34 +169,14 @@ public class Hungarian_method {
         g.addEdge(10,3);
         g.addEdge(10,13);
         g.addEdge(12,1);
+        return g;
+    }
+    public static void main(String[] args) throws InterruptedException {
 
+        Undirected_Graph g=CreateGraph();
         g.setBipartite();
 
-
-        JFrame frame =new JFrame();
-        frame.setSize(1100,600);
-        Hungarian_GUI gui=new Hungarian_GUI(g);
-        frame.add(gui);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        System.out.println(g);
-        LinkedList<NodeData> A=new LinkedList<>();
-        LinkedList<NodeData> B=new LinkedList<>();
-        Hungarian_m(g, frame);
-
-//        g.clearUnmached();
-//        frame.repaint();
-
-        for (NodeData n: g.get_all_V()){//fill the lists
-            if(n.group==Group.A){A.add(n);}
-            else{B.add(n);}
-        }
-        System.out.println("A: "+A.toString());
-        System.out.println("B: "+B.toString()+"\n");
-
-        System.out.println("matched edges: \n"+g.getAllMatchedEdges().toString());
-        System.out.println("\nmatched nodes: \n"+g.getAllMatchedNodes().toString());
-
+        TestHungarian(g);
+//        TestEdgeCover(g);
     }
 }

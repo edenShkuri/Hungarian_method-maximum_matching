@@ -148,6 +148,21 @@ public class Undirected_Graph {
         }
         return matchedEdges;
     }
+
+
+    public LinkedList<edgeData> getAllEdgesCover() {
+        LinkedList<edgeData> EdgesCover=new LinkedList<>();
+        for(NodeData n:vertices.values()){
+                for (edgeData e: get_all_E(n.getKey())){
+                    if(e.getEdgeCover()){
+                        if(!EdgesCover.contains(getEdge(e.getDest(), e.getSrc())))
+                        EdgesCover.add(e);
+                    }
+                }
+        }
+        return EdgesCover;
+    }
+
     public LinkedList<NodeData> getAllMatchedNodes() {
         LinkedList<NodeData> matchedNodes=new LinkedList<>();
         for(NodeData n:vertices.values()){
@@ -158,17 +173,30 @@ public class Undirected_Graph {
         return matchedNodes;
     }
 
+    public LinkedList<NodeData> getUnMatchedNodes() {
+        LinkedList<NodeData> UnmatchedNodes=new LinkedList<>();
+        for(NodeData n:vertices.values()){
+            if(!n.getMatch()){
+                UnmatchedNodes.add(n);
+            }
+        }
+        return UnmatchedNodes;
+    }
 
-    public void clearUnmached() {
-        LinkedList<edgeData> unMatched=new LinkedList<>();
+
+    public void clearUnCovered() {
+        LinkedList<edgeData> UnCovered=new LinkedList<>();
         for(NodeData n: get_all_V()){
             for(edgeData e: get_all_E(n.getKey())){
-                if(!e.getMatched()){
-                    unMatched.add(e);
+                if(!e.getMatched()) {
+                    if (!e.getEdgeCover()) {
+                        System.out.println("remove ("+e.getSrc()+", "+e.getDest()+")");
+                        UnCovered.add(e);
+                    }
                 }
             }
         }
-        for(edgeData e: unMatched){
+        for(edgeData e: UnCovered){
             removeEdge(e.getSrc(), e.getDest());
         }
     }

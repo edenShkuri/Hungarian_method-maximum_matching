@@ -3,12 +3,14 @@ public class edgeData{
     private NodeData dest;
     private boolean matched;
     private double weight;
+    private boolean inEdgeCover;
 
     public edgeData(NodeData src, NodeData dest) {
         this.src = src;
         this.dest = dest;
         matched=false;
         weight=1.0;
+        inEdgeCover=false;
     }
 
     public double getWeight() {
@@ -29,6 +31,10 @@ public class edgeData{
     public boolean getMatched(){return matched; }
 
     public void setMatched(boolean newMatch){matched=newMatch;}
+
+    public boolean getEdgeCover(){return inEdgeCover; }
+
+    public void setEdgeCover(boolean b){inEdgeCover=b;}
 
     public String toString(){
         return "("+src+","+dest+")";

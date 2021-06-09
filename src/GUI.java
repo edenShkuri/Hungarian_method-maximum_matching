@@ -63,6 +63,7 @@ public class GUI extends JPanel {
                     y1=n.getP().getY(),
                     x2=ni.getP().getX(),
                     y2=ni.getP().getY();
+                    y2=ni.getP().getY();
                  g2.setColor(Color.BLACK);
                  edgeData e=graph.getEdge(n.getKey(), ni.getKey());
                  if(e.getMatched()){

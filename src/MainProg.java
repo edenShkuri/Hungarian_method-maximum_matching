@@ -64,8 +64,7 @@ public class MainProg {
     }
 
     /**check if bipartite and set groups
-     define a match?
-     while there is a path from Am to Bm
+     while there is a path from A/Am to B/Bm
      find one and improve it
      build a new directed graph
      set the matches in the original graph
@@ -88,16 +87,16 @@ public class MainProg {
         Hungarian_m(g, f);
         LinkedList<NodeData> unMatched =g.getUnMatchedNodes();
         for(NodeData n: unMatched){
-            for(NodeData nei: g.getNi(n)){
-                if(nei.getMatch()){
-                    g.getEdge(n.getKey(), nei.getKey()).setEdgeCover(true);
-                    g.getEdge(nei.getKey(), n.getKey()).setEdgeCover(true);
-                    f.repaint();
-                    Thread.sleep(500);
-                    System.out.println();
-                    break;
-                }
-            }
+//            for(NodeData nei: g.getNi(n)){
+//                if(nei.getMatch()){
+                NodeData nei =g.getNi(n).stream().findFirst().get();
+                g.getEdge(n.getKey(), nei.getKey()).setEdgeCover(true);
+                g.getEdge(nei.getKey(), n.getKey()).setEdgeCover(true);
+                f.repaint();
+                Thread.sleep(500);
+//                    break;
+//                }
+//            }
         }
     }
 
@@ -136,9 +135,7 @@ public class MainProg {
         f.add(gui);
         f.setVisible(true);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         Thread.sleep(1500);
-        Hungarian_m(g,f);
         MinimumEdgeCover(g,f);
         g.clearUnCovered();
         f.repaint();
@@ -176,7 +173,7 @@ public class MainProg {
         Undirected_Graph g=CreateGraph();
         g.setBipartite();
 
-        TestHungarian(g);
-//        TestEdgeCover(g);
+//        TestHungarian(g);
+        TestEdgeCover(g);
     }
 }

@@ -190,7 +190,6 @@ public class Undirected_Graph {
             for(edgeData e: get_all_E(n.getKey())){
                 if(!e.getMatched()) {
                     if (!e.getEdgeCover()) {
-                        System.out.println("remove ("+e.getSrc()+", "+e.getDest()+")");
                         UnCovered.add(e);
                     }
                 }

@@ -76,12 +76,17 @@ public class MainProg {
         directed_Graph Matching_Graph =build_Directed_Graph(g);//build a directed graph
         List<NodeData> path=getAnyPath(Matching_Graph);
         while(path!=null){//while there is a path from Am to Bm
+            g.setCurrAugmentingPath(path);
+            f.repaint();
+            Thread.sleep(1000);
             SetAugmentingPath(g, path);
             f.repaint();
-            Thread.sleep(500);
+            Thread.sleep(700);
             Matching_Graph =build_Directed_Graph(g); //build a new directed graph
             path=getAnyPath(Matching_Graph);
         }
+        g.setCurrAugmentingPath(new LinkedList<>());
+        f.repaint();
     }
 
     public static void MinimumEdgeCover(Undirected_Graph g, JFrame f) throws InterruptedException {
@@ -205,7 +210,7 @@ public class MainProg {
         Graph creator can return graph such that not all nodes are connected to anyone.
         So, if you want to run Minimum Edge Cover - pass "ture", else "false".
          */
-        Undirected_Graph g = BipartiteGraphCreator(12,10,12,true);
+        Undirected_Graph g = BipartiteGraphCreator(20,20,60,true);
         g.setBipartite();
 
 //        TestHungarian(g);

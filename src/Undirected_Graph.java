@@ -10,10 +10,12 @@ import java.util.*;
 public class Undirected_Graph {
     HashMap<Integer, NodeData> vertices;
     HashMap<Integer, List<edgeData>> edges;
+    List<NodeData> currAugmentingPath;
 
     public Undirected_Graph() {
         vertices = new HashMap<>();
         edges = new HashMap<>();
+        currAugmentingPath = new LinkedList<>();
     }
 
     public NodeData getNode(int key) {
@@ -263,6 +265,13 @@ public class Undirected_Graph {
             return false;
         }
     }
+    public List<NodeData> getCurrAugmentingPath() {
+        return this.currAugmentingPath;
+    }
+
+    public void setCurrAugmentingPath(List<NodeData> path){
+        this.currAugmentingPath = path;
+    }
 
     @Override
     public String toString() {
@@ -277,4 +286,6 @@ public class Undirected_Graph {
         }
         return s.toString();
     }
+
+
 }

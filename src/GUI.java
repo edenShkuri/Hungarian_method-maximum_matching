@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GUI extends JPanel {
     Undirected_Graph graph;
@@ -32,7 +33,7 @@ public class GUI extends JPanel {
 
     public void paint(Graphics g){
         setSize(1000,500);
-
+        drawAugmentingPath(g);
         drawNodes(g);
 
         drawEdges(g);
@@ -75,13 +76,27 @@ public class GUI extends JPanel {
         }
     }
 
+    private void drawAugmentingPath(Graphics g) {
+        Graphics2D g2d= (Graphics2D)g;
+        g2d.setStroke(new BasicStroke(10));
+        g2d.setColor(new Color(150,150,150));
+        List<NodeData> path = graph.getCurrAugmentingPath();
+        for(int i = 0;i<path.size()-1;i++){
+            int x1=path.get(i).getP().getX(),
+                    y1=path.get(i).getP().getY(),
+                    x2=path.get(i+1).getP().getX(),
+                    y2=path.get(i+1).getP().getY();
+            g2d.drawLine(x1,y1,x2,y2);
+        }
+    }
+
     private void drawNodes(Graphics g) {
         int part = 900/maxGroup;
         int nodeWidth;
         if(maxGroup<=8) {
             nodeWidth = 40;
         }else {
-            nodeWidth = (int) (0.4 * part);
+            nodeWidth = (int) (0.6 * part);
         }
 
 

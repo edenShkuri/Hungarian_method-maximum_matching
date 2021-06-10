@@ -200,7 +200,6 @@ public class Undirected_Graph {
                     int y = pointJSON.getInt("Y");
                     n.setP(x,y);
                 }catch(Exception e){
-                    continue;
                 }
                 //Add this node to the graph
                 addNode(n);

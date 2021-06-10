@@ -1,18 +1,11 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-
-/**
- * Graph class implements graph interface, that displays a undirectional unweighted graph.
- * this class use a dynamic data structure, which allow to contain a large graph.
- * In addition contains the total actions performed, and the number of edges.
- */
 
 public class Undirected_Graph {
     HashMap<Integer, NodeData> vertices;
@@ -50,30 +43,6 @@ public class Undirected_Graph {
             edges.get(n2).remove(e);
         }
     }
-
-    public void removeNode(int key) {
-        vertices.remove(key);
-        for (edgeData e : edges.get(key)) {
-            edges.get(e.getDest()).remove(e.getSrc());
-        }
-        edges.remove(key);
-    }
-
-    /**
-     * Returns true if and only if (iff) there is node with no edges
-     * @return
-     */
-    public boolean hasLonely() { //based on dijkstra algorithm
-        for(List<edgeData> l : edges.values()){
-            if(l.size() == 0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-
     public Collection<NodeData> get_all_V() {
         return vertices.values();
     }
@@ -107,13 +76,6 @@ public class Undirected_Graph {
             n.group=Group.A;
             n.setTag(0);
         }
-    }
-    public int getSumOfEdges(){
-        int n = 0;
-        for(List<edgeData> l : edges.values()){
-            n+=l.size();
-        }
-        return n/2;
     }
 
     public boolean setBipartite(){
@@ -227,8 +189,6 @@ public class Undirected_Graph {
             JSONArray edges = graph.getJSONArray("Edges");
             JSONArray nodes = graph.getJSONArray("Nodes");
 
-            //Declare of the new graph
-//            g = new Graph();
             //For each Node, get the data ,make new node and add him to the graph
             for (int i = 0; i < nodes.length(); i++) {
                 JSONObject nJSON = nodes.getJSONObject(i);
@@ -240,7 +200,7 @@ public class Undirected_Graph {
                     int y = pointJSON.getInt("Y");
                     n.setP(x,y);
                 }catch(Exception e){
-
+                    continue;
                 }
                 //Add this node to the graph
                 addNode(n);
@@ -307,15 +267,15 @@ public class Undirected_Graph {
 
     @Override
     public String toString() {
-        String s = "Nodes     Edges\n";
+        StringBuilder s = new StringBuilder("Nodes     Edges\n");
         for(int key : this.edges.keySet()){
-            s+="key: "+key+" | ";
+            s.append("key: ").append(key).append(" | ");
 
             for(edgeData e : edges.get(key)){
-                s+=""+e.getDest()+" ";
+                s.append("").append(e.getDest()).append(" ");
             }
-            s+="\n";
+            s.append("\n");
         }
-        return s;
+        return s.toString();
     }
 }

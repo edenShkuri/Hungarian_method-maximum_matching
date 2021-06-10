@@ -1,15 +1,10 @@
-/**
- * NodeData class implements node_data interface, that displays a one node.
- * this class use a dynamic data structure, which allow to contain a lot of neighbors nodes.
- * In addition contains index that raise at 1 when create new node, that allow each node have a unique key.
- * and private string data (info) and int data (tag).
- */
+
 enum Group{
     A,B
 }
 public class NodeData implements Comparable<Object>{
     private static int index = 0; // static variable, to be sure that is unique key
-    private int key;
+    private final int key;
     private boolean match;
     private int tag;
     Group group;
@@ -67,7 +62,6 @@ public class NodeData implements Comparable<Object>{
     @Override
     public String toString() {
         return ""+key;
-
     }
 
     public void setMatch(boolean match) {

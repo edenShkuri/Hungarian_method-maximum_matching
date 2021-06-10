@@ -1,3 +1,5 @@
+import org.w3c.dom.Node;
+
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -5,8 +7,6 @@ import java.util.Random;
 
 
 public class MainProg {
-
-
     public static directed_Graph build_Directed_Graph(Undirected_Graph g) {
         directed_Graph newGraph=new directed_Graph();
         for(NodeData n: g.get_all_V()) {
@@ -44,7 +44,7 @@ public class MainProg {
     public static List<NodeData> getAnyPath(directed_Graph g){
         LinkedList<NodeData> unsaturated_in_A=new LinkedList<>();
         LinkedList<NodeData> unsaturated_in_B=new LinkedList<>();
-        List<NodeData> path=new LinkedList<>();
+        List<NodeData> path;
 
         for (NodeData n: g.getV()){//fill the lists
             if(!n.getMatch()){
@@ -88,16 +88,11 @@ public class MainProg {
         Hungarian_m(g, f);
         LinkedList<NodeData> unMatched =g.getUnMatchedNodes();
         for(NodeData n: unMatched){
-//            for(NodeData nei: g.getNi(n)){
-//                if(nei.getMatch()){
                 NodeData nei =g.getNi(n).stream().findFirst().get();
                 g.getEdge(n.getKey(), nei.getKey()).setEdgeCover(true);
                 g.getEdge(nei.getKey(), n.getKey()).setEdgeCover(true);
                 f.repaint();
                 Thread.sleep(500);
-//                    break;
-//                }
-//            }
         }
     }
 
@@ -114,24 +109,11 @@ public class MainProg {
         g.clearUnCovered();
         f.repaint();
 
-        System.out.println(g+"\n");
-        LinkedList<NodeData> A=new LinkedList<>();
-        LinkedList<NodeData> B=new LinkedList<>();
-        for (NodeData n: g.get_all_V()){//fill the lists
-            if(n.group==Group.A){A.add(n);}
-            else{B.add(n);}
-        }
-        System.out.println("A: "+A.toString());
-        System.out.println("B: "+B.toString()+"\n");
-
         System.out.println("matched edges: \n"+g.getAllMatchedEdges().toString());
         System.out.println("\nmatched nodes: \n"+g.getAllMatchedNodes().toString());
     }
 
     public static void TestEdgeCover(Undirected_Graph g) throws Exception {
-        if(g.hasLonely()){
-            throw new Exception("This graph had node with no edges!");
-        }
         JFrame f =new JFrame();
         f.setSize(1100,600);
         GUI gui=new GUI(g);
@@ -140,38 +122,18 @@ public class MainProg {
         f.setVisible(true);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Thread.sleep(1500);
+
         MinimumEdgeCover(g,f);
         g.clearUnCovered();
         f.repaint();
+
         LinkedList<edgeData> Edge_cover =new LinkedList<>();
         Edge_cover.addAll(g.getAllEdgesCover());
         Edge_cover.addAll(g.getAllMatchedEdges());
         System.out.println("Edges in Edge cover:\n"+ Edge_cover.toString());
     }
 
-    public static Undirected_Graph CreateGraph(){
-        Undirected_Graph g=new Undirected_Graph();
-        for (int i=0; i<14; i++){
-            NodeData n=new NodeData(i);
-            g.addNode(n);
-        }
-        g.addEdge(6,3);
-        g.addEdge(0,3);
-        g.addEdge(0,7);
-        g.addEdge(0,11);
-        g.addEdge(0,13);
-        g.addEdge(2,1);
-        g.addEdge(2,5);
-        g.addEdge(2,9);
-        g.addEdge(4,3);
-        g.addEdge(4,9);
-        g.addEdge(4,11);
-        g.addEdge(8,3);
-        g.addEdge(10,3);
-        g.addEdge(10,13);
-        g.addEdge(12,1);
-        return g;
-    }
+
 
     /**
      * Create random bipartite graph.
@@ -182,12 +144,13 @@ public class MainProg {
      * @param E - Sum of edges.
      * @return Bipartite Undirected Graph.
      */
-    public static Undirected_Graph BipartiteGraphCreator(int Va,int Vb, int E) throws Exception {
+    public static Undirected_Graph BipartiteGraphCreator(int Va,int Vb, int E, boolean connected) throws Exception {
+        if(connected && E<Vb && E<Va){throw new Exception("This graph, cannot be connected");}
         if(E > Va*Vb){ throw new Exception("This graph, cannot have "+E+" edges");}
         Undirected_Graph g = new Undirected_Graph();
-        //Add nodes to the graph
         List<NodeData> nodesA = new LinkedList<>();
         List<NodeData> nodesB = new LinkedList<>();
+        //Add nodes to the graph
         for(int i = 0;i<Va;++i){
             NodeData n = new NodeData();
             g.addNode(n);
@@ -199,6 +162,33 @@ public class MainProg {
             nodesB.add(n);
         }
         Random r = new Random();
+        if(connected){
+            if(Va > Vb){
+                List<NodeData> nodesBcopy = new LinkedList<>(nodesB);
+                for(NodeData n : nodesA){
+                    if(!nodesBcopy.isEmpty()) {
+                        NodeData destNode = nodesBcopy.get(r.nextInt(nodesBcopy.size()));
+                        nodesBcopy.remove(destNode);
+                        g.addEdge(n.getKey(), destNode.getKey());
+                    }else{
+                        g.addEdge(n.getKey(),nodesB.get(r.nextInt(nodesB.size())).getKey());
+                    }
+                }
+            } else{
+                List<NodeData> nodesAcopy = new LinkedList<>(nodesA);
+                for(NodeData n : nodesB){
+                    if(!nodesAcopy.isEmpty()) {
+                        NodeData destNode = nodesAcopy.get(r.nextInt(nodesAcopy.size()));
+                        nodesAcopy.remove(destNode);
+                        g.addEdge(n.getKey(), destNode.getKey());
+                    }else{
+                        g.addEdge(n.getKey(),nodesA.get(r.nextInt(nodesA.size())).getKey());
+                    }
+                }
+            }
+            E = E-Math.max(Va,Vb);
+        }
+
         //Connect more random edges to the graph
         while(E>0){
             int src = nodesA.get(r.nextInt(nodesA.size())).getKey();
@@ -211,11 +201,11 @@ public class MainProg {
         return g;
     }
     public static void main(String[] args) throws Exception {
-
-//        Undirected_Graph g=CreateGraph();
-        Undirected_Graph g = BipartiteGraphCreator(12,15,50);
-//        Undirected_Graph g = BipartiteGraphCreator(8,8,30);
-
+        /*
+        Graph creator can return graph such that not all nodes are connected to anyone.
+        So, if you want to run Minimum Edge Cover - pass "ture", else "false".
+         */
+        Undirected_Graph g = BipartiteGraphCreator(12,10,12,true);
         g.setBipartite();
 
 //        TestHungarian(g);

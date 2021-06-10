@@ -1,6 +1,6 @@
 public class edgeData{
-    private NodeData src;
-    private NodeData dest;
+    private final NodeData src;
+    private final NodeData dest;
     private boolean matched;
     private double weight;
     private boolean inEdgeCover;

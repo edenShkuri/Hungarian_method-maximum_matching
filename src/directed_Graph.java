@@ -3,8 +3,6 @@ import java.util.*;
 public class directed_Graph {
     private HashMap<Integer, NodeData> vertices;
     private HashMap<Integer, HashMap<Integer, edgeData>> edges;
-    private ArrayList<ArrayList<Integer> > adj;
-    private LinkedList<NodeData> list;
     HashMap<Integer, NodeData> re;
 
 
@@ -56,9 +54,7 @@ public class directed_Graph {
             NodeData tmp = vertices.get(key);
 
             for (NodeData n : getV()) {
-                if (edges.get(n.getKey()).containsKey(key)) {
                     edges.get(n.getKey()).remove(key);
-                }
             }
 
             edges.remove(key);
@@ -144,16 +140,16 @@ public class directed_Graph {
         }
 
         public String toString() {
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for (NodeData n : getV()) {
-                s += "KEY: " + n.getKey() + "\n";
-                s += "EDGES: ";
+                s.append("KEY: ").append(n.getKey()).append("\n");
+                s.append("EDGES: ");
                 for (edgeData e : getE(n.getKey())) {
-                    s += "(" + e.getSrc() + "->" + e.getDest()+")";
+                    s.append("(").append(e.getSrc()).append("->").append(e.getDest()).append(")");
                 }
-                s += "\n";
+                s.append("\n");
             }
-            return s;
+            return s.toString();
         }
 
     }

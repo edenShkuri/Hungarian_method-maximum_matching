@@ -213,7 +213,8 @@ public class MainProg {
     public static void main(String[] args) throws Exception {
 
 //        Undirected_Graph g=CreateGraph();
-        Undirected_Graph g = BipartiteGraphCreator(5,3,12);
+        Undirected_Graph g = BipartiteGraphCreator(12,15,50);
+//        Undirected_Graph g = BipartiteGraphCreator(8,8,30);
 
         g.setBipartite();
 

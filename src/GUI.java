@@ -35,8 +35,7 @@ public class GUI extends JPanel {
     public void paint(Graphics g){
         setSize(1000,500);
 
-        if(maxGroup<=8){drawNodesUpto8(g);}
-        else{drawNodes(g);}
+        drawNodes(g);
 
         drawEdges(g);
         drawDetails(g);
@@ -117,28 +116,33 @@ public class GUI extends JPanel {
 
 
     private void drawNodes(Graphics g) {
-        int part = 800/maxGroup;
-        int nodeWidth = (int)(0.4 * part);
-        int space = (int)(0.6 * part);
+        int part = 950/maxGroup;
+        int nodeWidth, space;
+        if(maxGroup<=8) {
+            nodeWidth = 40;
+        }else {
+            nodeWidth = (int) (0.4 * part);
+        }
+
 
         Graphics2D g2= (Graphics2D)g;
         g2.setStroke(new BasicStroke(3));
-        int i=0;
+        int i=1;
 
         for(NodeData n: GroupA){
             g2.setColor(Color.white);
 
             if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
 
-            g2.fillOval(100+(i*part),100,nodeWidth,nodeWidth);
+            g2.fillOval(25+(i*part),100,nodeWidth,nodeWidth);
             g2.setColor(Color.black);
-            g2.drawOval(100+(i*part),100,nodeWidth,nodeWidth);
-            n.setP((int)(100+(i*part)+nodeWidth/2), 142);
+            g2.drawOval(25+(i*part),100,nodeWidth,nodeWidth);
+            n.setP((int)(25+(i*part)+nodeWidth/2), 102+nodeWidth);
             g2.setColor(Color.black);
-            Font f=new Font("SansSerif", Font.BOLD, 18);
+            Font f=new Font("SansSerif", Font.BOLD, (int)(0.45*nodeWidth));
             g2.setFont(f);
             int key=n.getKey();
-            g2.drawString(""+key, (100*i)+55, 126);
+            g2.drawString(""+key, (int)(25+(i*part)+(0.3*nodeWidth)), 105+nodeWidth/2);
             i++;
         }
 
@@ -146,15 +150,15 @@ public class GUI extends JPanel {
         for(NodeData n: GroupB){
             g2.setColor(Color.WHITE);
             if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
-            g2.fillOval(40+100*i,300,nodeWidth,nodeWidth);
+            g2.fillOval(25+(i*part),300,nodeWidth,nodeWidth);
             g2.setColor(Color.BLACK);
-            g2.drawOval(40+100*i,300,nodeWidth,nodeWidth);
-            n.setP((int)(100+(i*part)+nodeWidth/2), 299);
+            g2.drawOval(25+(i*part),300,nodeWidth,nodeWidth);
+            n.setP((int)(25+(i*part)+nodeWidth/2), 299);
             g2.setColor(Color.black);
-            Font f=new Font("SansSerif", Font.BOLD, 18);
+            Font f=new Font("SansSerif", Font.BOLD, (int)(0.45*nodeWidth));
             g2.setFont(f);
             int key=n.getKey();
-            g2.drawString(""+key, (100*i)+55, 326);
+            g2.drawString(""+key, (int)(25+(i*part)+0.3*nodeWidth), 305+nodeWidth/2);
             i++;
         }
     }

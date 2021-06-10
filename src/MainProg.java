@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainProg {
@@ -127,7 +128,10 @@ public class MainProg {
         System.out.println("\nmatched nodes: \n"+g.getAllMatchedNodes().toString());
     }
 
-    public static void TestEdgeCover(Undirected_Graph g) throws InterruptedException {
+    public static void TestEdgeCover(Undirected_Graph g) throws Exception {
+        if(g.hasLonely()){
+            throw new Exception("This graph had node with no edges!");
+        }
         JFrame f =new JFrame();
         f.setSize(1100,600);
         GUI gui=new GUI(g);
@@ -168,9 +172,49 @@ public class MainProg {
         g.addEdge(12,1);
         return g;
     }
-    public static void main(String[] args) throws InterruptedException {
 
-        Undirected_Graph g=CreateGraph();
+    /**
+     * Create random bipartite graph.
+     * NOTE: if E > V(a)*V(b), throw exception.
+     *
+     * @param Va - Sum of nodes in group A.
+     * @param Vb - Sum of nodes in group B.
+     * @param E - Sum of edges.
+     * @return Bipartite Undirected Graph.
+     */
+    public static Undirected_Graph BipartiteGraphCreator(int Va,int Vb, int E) throws Exception {
+        if(E > Va*Vb){ throw new Exception("This graph, cannot have "+E+" edges");}
+        Undirected_Graph g = new Undirected_Graph();
+        //Add nodes to the graph
+        List<NodeData> nodesA = new LinkedList<>();
+        List<NodeData> nodesB = new LinkedList<>();
+        for(int i = 0;i<Va;++i){
+            NodeData n = new NodeData();
+            g.addNode(n);
+            nodesA.add(n);
+        }
+        for(int i = 0;i<Vb;++i){
+            NodeData n = new NodeData();
+            g.addNode(n);
+            nodesB.add(n);
+        }
+        Random r = new Random();
+        //Connect more random edges to the graph
+        while(E>0){
+            int src = nodesA.get(r.nextInt(nodesA.size())).getKey();
+            int dest = nodesB.get(r.nextInt(nodesB.size())).getKey();
+            if(g.getEdge(src,dest) == null) {
+                g.addEdge(src,dest);
+                E--;
+            }
+        }
+        return g;
+    }
+    public static void main(String[] args) throws Exception {
+
+//        Undirected_Graph g=CreateGraph();
+        Undirected_Graph g = BipartiteGraphCreator(5,3,12);
+
         g.setBipartite();
 
 //        TestHungarian(g);

@@ -33,7 +33,7 @@ public class Undirected_Graph {
     }
 
     public void addEdge(int n1, int n2) {
-        if(getEdge(n1,n2) == null){
+        if(getEdge(n1,n2) == null && n1!=n2){
             edgeData e1 = new edgeData(getNode(n1), getNode(n2));
             edgeData e2 = new edgeData(getNode(n2), getNode(n1));
 
@@ -58,6 +58,21 @@ public class Undirected_Graph {
         }
         edges.remove(key);
     }
+
+    /**
+     * Returns true if and only if (iff) there is node with no edges
+     * @return
+     */
+    public boolean hasLonely() { //based on dijkstra algorithm
+        for(List<edgeData> l : edges.values()){
+            if(l.size() == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     public Collection<NodeData> get_all_V() {
         return vertices.values();
@@ -92,6 +107,13 @@ public class Undirected_Graph {
             n.group=Group.A;
             n.setTag(0);
         }
+    }
+    public int getSumOfEdges(){
+        int n = 0;
+        for(List<edgeData> l : edges.values()){
+            n+=l.size();
+        }
+        return n/2;
     }
 
     public boolean setBipartite(){

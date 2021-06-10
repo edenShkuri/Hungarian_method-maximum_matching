@@ -9,6 +9,7 @@ public class GUI extends JPanel {
     LinkedList<NodeData> GroupA;
     LinkedList<NodeData> GroupB;
     boolean EdgeCover;
+    int maxGroup;
 
     public GUI(Undirected_Graph g) {
         this.graph=g;
@@ -24,6 +25,7 @@ public class GUI extends JPanel {
             }
         }
         EdgeCover=false;
+        maxGroup=Math.max(GroupA.size(), GroupB.size());
     }
 
     public void setEdgeCover(boolean b){
@@ -31,11 +33,11 @@ public class GUI extends JPanel {
     }
 
     public void paint(Graphics g){
-        int max=Math.max(GroupA.size(), GroupB.size());
-        int w=max*40+(max+1)*60+200;
-        setSize(w,500);
+        setSize(1000,500);
 
-        drawNodes(g);
+        if(maxGroup<=8){drawNodesUpto8(g);}
+        else{drawNodes(g);}
+
         drawEdges(g);
         drawDetails(g);
 
@@ -77,22 +79,22 @@ public class GUI extends JPanel {
         }
     }
 
-    private void drawNodes(Graphics g) {
+    private void drawNodesUpto8(Graphics g) {
         Graphics2D g2= (Graphics2D)g;
         g2.setStroke(new BasicStroke(3));
         int i=1;
         for(NodeData n: GroupA){
             g2.setColor(Color.white);
             if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
-            g2.fillOval(100*i,100,40,40);
+            g2.fillOval(40+100*i,100,40,40);
             g2.setColor(Color.black);
-            g2.drawOval(100*i,100,40,40);
-            n.setP(100*i+20, 143);
+            g2.drawOval(40+100*i,100,40,40);
+            n.setP(100*i+60, 142);
             g2.setColor(Color.black);
             Font f=new Font("SansSerif", Font.BOLD, 18);
             g2.setFont(f);
             int key=n.getKey();
-            g2.drawString(""+key, (100*i)+15, 126);
+            g2.drawString(""+key, (100*i)+55, 126);
             i++;
         }
 
@@ -100,15 +102,59 @@ public class GUI extends JPanel {
         for(NodeData n: GroupB){
             g2.setColor(Color.WHITE);
             if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
-            g2.fillOval(100*i,300,40,40);
+            g2.fillOval(40+100*i,300,40,40);
             g2.setColor(Color.BLACK);
-            g2.drawOval(100*i,300,40,40);
-            n.setP(100*i+20, 298);
+            g2.drawOval(40+100*i,300,40,40);
+            n.setP(100*i+60, 299);
             g2.setColor(Color.black);
             Font f=new Font("SansSerif", Font.BOLD, 18);
             g2.setFont(f);
             int key=n.getKey();
-            g2.drawString(""+key, (100*i)+15, 326);
+            g2.drawString(""+key, (100*i)+55, 326);
+            i++;
+        }
+    }
+
+
+    private void drawNodes(Graphics g) {
+        int part = 800/maxGroup;
+        int nodeWidth = (int)(0.4 * part);
+        int space = (int)(0.6 * part);
+
+        Graphics2D g2= (Graphics2D)g;
+        g2.setStroke(new BasicStroke(3));
+        int i=0;
+
+        for(NodeData n: GroupA){
+            g2.setColor(Color.white);
+
+            if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
+
+            g2.fillOval(100+(i*part),100,nodeWidth,nodeWidth);
+            g2.setColor(Color.black);
+            g2.drawOval(100+(i*part),100,nodeWidth,nodeWidth);
+            n.setP((int)(100+(i*part)+nodeWidth/2), 142);
+            g2.setColor(Color.black);
+            Font f=new Font("SansSerif", Font.BOLD, 18);
+            g2.setFont(f);
+            int key=n.getKey();
+            g2.drawString(""+key, (100*i)+55, 126);
+            i++;
+        }
+
+        i=1;
+        for(NodeData n: GroupB){
+            g2.setColor(Color.WHITE);
+            if(n.getMatch()){ g2.setColor(new Color(201,62,7)); }
+            g2.fillOval(40+100*i,300,nodeWidth,nodeWidth);
+            g2.setColor(Color.BLACK);
+            g2.drawOval(40+100*i,300,nodeWidth,nodeWidth);
+            n.setP((int)(100+(i*part)+nodeWidth/2), 299);
+            g2.setColor(Color.black);
+            Font f=new Font("SansSerif", Font.BOLD, 18);
+            g2.setFont(f);
+            int key=n.getKey();
+            g2.drawString(""+key, (100*i)+55, 326);
             i++;
         }
     }
